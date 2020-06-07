@@ -17,6 +17,11 @@ You can assume that the host instances class has the following API:
 public float getLoad()
 public void handleRequest(Request $request)
 
+# Commits you might want to look at:
+1. 08cce1bcc2ac2a6d62925aa4b43cbd2d51505c1e (Initial solution)
+2. 6d4bd042d1385aa14de83b08ef062903b0198223 (Introduce HostInstanceRepository)
+3. c1c481b0d30efc3062a1306a388d3af13813097f (Add RequestHandlerInterface)
+
 # Notes
 
 `HostInstance` lists are assumed iterables, since it wasn't explicitly said they were arrays. Performance difference
