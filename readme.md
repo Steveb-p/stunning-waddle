@@ -24,6 +24,8 @@ should be negligible (mostly reiterating), if any - and all points below hold tr
 
 PhpDocs are omitted in cases where they do not provide any additional value (like explicit function parameters)
 
+## Regarding load balancing application as a whole
+
 Load balancer processes should run as permanent, long running processes (in contrast to running them under PHP-FPM or
 apache-mod). This is suggested since running request-response cycles as separate processes would mean that server
 would be quickly starved of resources: each new request would mean a new process which has to wait for the request
@@ -38,6 +40,8 @@ more explicit and allow this class to contain a setter method that would specifi
 (as a reaction to cpu loads changing).
 Mutable instance would - in my opinion - be more obscure than explicit setting, while not providing any real performance
 gains. Unless we really need a generator with some sort of state to keep track of called hosts.
+
+## Regarding code
 
 `handleRequest` method should return some sort of Response instead of `void`. This would allow passing it back to
 `Connection` instance in an event loop.
@@ -86,6 +90,12 @@ Unless there exists some sort of business requirement, implementing LoadBalancer
 recommended. Considering the amount of battle tested, ready to use solutions (HAProxy, reverse-proxy in Nginx to name
 a few) should be preferred. New implementation made from scratch would be less feature complete (e.g.: unable to work
 with websockets, prone to crashes due to memory leaks, and less performant especially for static content).
+
+Symfony provides nice caching mechanisms (Redis and in-memory array caches) which would play nicely with `HostInstance`
+repository. Application might use chain caches too. This would mean that load balancer would first see if it has data
+in memory, then look into Redis, and then into actual database (though I'm almost sure Redis cache could be skipped,
+as for long running processes data in process memory should be enough of a cache - and we want fresh results as much as
+possible too, to prevent load balancing into a server that just started failing.
 
 # Running tests
 
