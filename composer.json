@@ -1,0 +1,31 @@
+{
+    "name": "steveb/exercise-01",
+    "type": "library",
+    "description": "",
+    "authors": [
+        {
+            "name": "Paweł Niedzielski",
+            "email": "pawel.tadeusz.niedzielski@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Steveb\\LoadBalancer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Steveb\\LoadBalancer\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpstan analyse && phpunit tests"
+    },
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2",
+        "phpstan/phpstan": "^0.12.25"
+    }
+}
