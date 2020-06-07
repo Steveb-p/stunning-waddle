@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Steveb\LoadBalancer\HostInstance;
 use Steveb\LoadBalancer\LoadBalancer;
 use Steveb\LoadBalancer\Repository\HostInstanceRepository;
+use Steveb\LoadBalancer\RequestHandler\RequestHandlerInterface;
 use Steveb\LoadBalancer\RequestInterface;
 use Steveb\LoadBalancer\Strategy\StrategyInterface;
 
@@ -14,12 +15,7 @@ class LoadBalancerTest extends TestCase
     public function testLoadBalancerUsesStrategyAndCallsRequestHandlerOnHost(): void
     {
         $hostInstance = $this->createMock(HostInstance::class);
-        $hostInstance->expects($this->once())
-            ->method('handleRequest');
-
         $unusedHostInstance = $this->createMock(HostInstance::class);
-        $unusedHostInstance->expects($this->never())
-            ->method('handleRequest');
 
         $repository = $this->createMock(HostInstanceRepository::class);
         $repository->expects($this->once())
@@ -31,7 +27,12 @@ class LoadBalancerTest extends TestCase
             ->method('selectHost')
             ->willReturn($hostInstance);
 
-        $loadBalancer = new LoadBalancer($repository, $strategy);
+        $requestHandler = $this->createMock(RequestHandlerInterface::class);
+        $requestHandler->expects($this->once())
+            ->method('handleRequest')
+            ->with($hostInstance);
+
+        $loadBalancer = new LoadBalancer($repository, $strategy, $requestHandler);
 
         $loadBalancer->handleRequest($this->createMock(RequestInterface::class));
     }

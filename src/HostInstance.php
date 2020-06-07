@@ -6,5 +6,4 @@ namespace Steveb\LoadBalancer;
 interface HostInstance
 {
     public function getLoad(): float;
-    public function handleRequest(RequestInterface $request): void;
 }
