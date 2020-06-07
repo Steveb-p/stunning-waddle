@@ -14,13 +14,15 @@ The second method is called handleRequest(Request $request)and will load balance
 
 You can assume that the host instances class has the following API:
 
+```
 public float getLoad()
 public void handleRequest(Request $request)
+```
 
 # Commits you might want to look at:
-1. 08cce1bcc2ac2a6d62925aa4b43cbd2d51505c1e (Initial solution)
-2. 6d4bd042d1385aa14de83b08ef062903b0198223 (Introduce HostInstanceRepository)
-3. c1c481b0d30efc3062a1306a388d3af13813097f (Add RequestHandlerInterface)
+1. 08cce1 (Initial solution)
+2. 6d4bd0 (Introduce HostInstanceRepository)
+3. c1c481 (Add RequestHandlerInterface)
 
 # Notes
 
@@ -34,7 +36,7 @@ PhpDocs are omitted in cases where they do not provide any additional value (lik
 Load balancer processes should run as permanent, long running processes (in contrast to running them under PHP-FPM or
 apache-mod). This is suggested since running request-response cycles as separate processes would mean that server
 would be quickly starved of resources: each new request would mean a new process which has to wait for the request
-to be processes on the destination server. While those processes would not require much in terms of processing power,
+to be processed on the destination server. While those processes would not require much in terms of processing power,
 they would still occupy some resources nonetheless.
 It is advisable to use some sort of event-loop library, like `reactphp/event-loop` or `amp/event-loop` (`amphp/http-server`).
 
@@ -78,7 +80,7 @@ in this task, but it would be important to remember.
 
 For those long running processes there should exist a memory check and shutdown procedure. PHP memory limits would
 simply kill the process, which would cause our load balancing to lose some requests. Disabling memory limits would
-make potential memory leaks a lot harded to notice. Ideally shutdown procedure should allow in-memory requests to be handled
+make potential memory leaks a lot harder to notice. Ideally shutdown procedure should allow in-memory requests to be handled
 while no longer accepting new requests.
 Running it as PHP-FPM instead would remedy this, but at the same time introduce multiple spawned processes for each request
 (even for static content).
